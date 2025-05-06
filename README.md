@@ -1,2 +1,4 @@
 # dsi321_2025
-Real-Time Weather Data Pipeline with Visualization
+Real-Time Air Quality Data Foecasting Pipeline with Visualization
+
+by: Pattaranit Jaronnaovapat
