@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-
-=======
+version: "3.8"
 services:
   lakefs-dev:
     image: treeverse/lakefs:1.7.0
@@ -76,10 +74,22 @@ services:
     # networks:
     #   - prefect-network
 
+  streamlit:
+    build: 
+      context: .
+      dockerfile: make/Dockerfile.streamlit
+    ports:
+    - "8501:8501"
+    volumes:
+    - ./visualization:/app
+    environment:
+    - LAKEFS_ENDPOINT=http://lakefs-dev:8000
+    - LAKEFS_ACCESS_KEY=access_key
+    - LAKEFS_SECRET_KEY=secret_key
+    depends_on:
+    - prefect-server
+    - lakefs-dev
+    
+    
 volumes:
   postgres_data:
-
-# networks:
-#   prefect-network:
-#     driver: bridge
->>>>>>> ddc3e49 (Add docker-compose setup and project files)
