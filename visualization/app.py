@@ -130,21 +130,34 @@ if menu == "Dashboard":
         st.plotly_chart(fig1, use_container_width=True)
 
     with c2:
-        df_compare = df_filtered.dropna(subset=["PM25.value", "province", "nameEN"])
-        if not df_compare.empty:
-            fig2 = px.scatter(
-                df_compare,
-                x="nameEN",
+        df_box = df_filtered.dropna(subset=["PM25.value", "province"])
+    
+        if not df_box.empty:
+            # Step 1: Find top 5 provinces by max PM2.5
+            top5_provinces = (
+                df_box.groupby("province", as_index=False)["PM25.value"]
+                .max()
+                .sort_values("PM25.value", ascending=False)
+                .head(5)["province"]
+            )
+
+            # Step 2: Filter only top 5 provinces
+            df_box_top5 = df_box[df_box["province"].isin(top5_provinces)]
+
+            # Step 3: Plot
+            fig2 = px.box(
+                df_box_top5,
+                x="province",
                 y="PM25.value",
-                color="province",
-                title="PM2.5 by Station and Province",
-                labels={"nameEN": "Station", "PM25.value": "PM2.5"},
-                opacity=0.6
+                points="outliers",
+                title="Top 5 Provinces by PM2.5 Distribution",
+                labels={"province": "Province", "PM25.value": "PM2.5"},
             )
             fig2.update_layout(xaxis_tickangle=-45, height=450)
             st.plotly_chart(fig2, use_container_width=True)
         else:
-            st.info("No valid station-wise PM2.5 data to plot.")
+            st.info("No valid PM2.5-province data to plot.")
+
 
 
 
