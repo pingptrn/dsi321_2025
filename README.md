@@ -13,7 +13,7 @@ It integrates the following key components using Docker Compose for seamless orc
 Docker Compose Orchestration
 Using docker-compose up, the system spins up multiple interconnected services as containers:
 
-1. lakeFS (Data Version Control)
+1. **lakeFS (Data Version Control)**
 
 - Acts as a Git-like interface for object storage, managing version-controlled data in airquality.parquet format.
 
@@ -21,7 +21,7 @@ Using docker-compose up, the system spins up multiple interconnected services as
 
 - Enables reproducibility, branching, and rollback of datasets, ensuring data integrity.
 
-2. Prefect (Data Orchestration)
+2. **Prefect (Data Orchestration)**
 
 - Automates the daily ingestion, cleaning, and transformation of PM2.5 data.
 
@@ -29,13 +29,13 @@ Using docker-compose up, the system spins up multiple interconnected services as
 
 - Ensures reliable and scheduled delivery of data to lakeFS.
 
-3. Jupyter Notebook (Data Exploration & Development)
+3. **Jupyter Notebook (Data Exploration & Development)**
 
 - Used for interactive development, debugging, and EDA (exploratory data analysis) of air quality data.
 
 - Access version-controlled data directly from lakeFS (via S3 protocol using s3fs), allowing for live experimentation with up-to-date datasets.
 
-4. Streamlit (Interactive Dashboard)
+4. **Streamlit (Interactive Dashboard)**
 
 - Provides a real-time, filterable web dashboard visualizing key air quality metrics.
 
