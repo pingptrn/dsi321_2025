@@ -13,7 +13,7 @@ with open("style.css") as f:
 
 # --- Sidebar Navigation ---
 st.sidebar.image("https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png", width=200)
-menu = st.sidebar.radio("Navigation", ["Dashboard", "Map View", "Raw Data"], index=0)
+menu = st.sidebar.radio("Navigation", ["Dashboard", "Map View", "Raw Data", "ML View"], index=0)
 st.sidebar.markdown("---")
 st.sidebar.markdown("**User:** You\nVersion: 1.0")
 st.sidebar.button("Logout")
@@ -176,6 +176,39 @@ elif menu == "Raw Data":
     st.dataframe(df_filtered)
     st.download_button("Download CSV", data=df_filtered.to_csv(index=False), file_name="pm25_filtered.csv")
   
+# --- ML View ---
+elif menu == "ML View":
+    st.title("🤖 ML View: K-Means Clustering on PM2.5")
+    st.markdown("Each color represents a cluster of stations based on similar PM2.5 levels using K-Means (n=3)")
 
+    df_ml = df_filtered.dropna(subset=["PM25.value", "lat", "long", "nameEN"]).copy()
+    df_ml = df_ml[df_ml["PM25.value"] > 0]  # 🚨 Filter out invalid values
 
+    if df_ml.empty:
+        st.warning("No data available for clustering.")
+    else:
+        from sklearn.cluster import KMeans
 
+        kmeans = KMeans(n_clusters=3, random_state=42)
+        df_ml["cluster"] = kmeans.fit_predict(df_ml[["PM25.value"]])
+
+        # Sort clusters by average PM2.5 and label them
+        cluster_means = df_ml.groupby("cluster")["PM25.value"].mean().sort_values().reset_index()
+        cluster_mapping = {old: new for new, old in enumerate(cluster_means["cluster"])}
+        df_ml["cluster"] = df_ml["cluster"].map(cluster_mapping)
+        cluster_names = {0: "Low PM2.5", 1: "Moderate PM2.5", 2: "High PM2.5"}
+        df_ml["cluster_label"] = df_ml["cluster"].map(cluster_names)
+
+        fig = px.scatter_mapbox(
+            df_ml,
+            lat="lat",
+            lon="long",
+            color="cluster_label",           # 🚀 Easier to interpret
+            size="PM25.value",               # ✅ No more -1 errors
+            hover_name="nameEN",
+            mapbox_style="open-street-map",
+            zoom=5,
+            title="📍 K-Means Clustering of PM2.5 Stations by Pollution Level"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
