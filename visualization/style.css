@@ -1,0 +1,22 @@
+.metric-box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+.metric-label {
+    font-size: 16px;
+    color: #555;
+}
+.metric-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #222;
+}
+.metric-delta {
+    font-size: 14px;
+    color: green;
+}
+    
