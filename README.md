@@ -5,7 +5,7 @@ Course: DSI321 – Big Data Infrastructure
 
 Institution: Data Science and Innovation, Thammasat University
 
-# Project Description
+# 🌐 Project Description
 This project implements a Real-Time Air Quality Data Pipeline with Interactive Visualization, focused on monitoring PM2.5 levels across Thailand. The system leverages modern open-source data infrastructure tools to create a full-stack pipeline — from data ingestion and versioned storage to automated workflows and web-based analytics.
 
 It integrates the following key components using Docker Compose for seamless orchestration:
@@ -102,7 +102,7 @@ Using docker-compose up, the system spins up multiple interconnected services as
    
          docker-compose up --build
 
-# Streamlit UI Features
+# 🖥️ Streamlit UI Features
 **Filters**
 
 -Province (All, Bangkok, Chiang Mai, etc.)
@@ -120,7 +120,7 @@ Using docker-compose up, the system spins up multiple interconnected services as
 - Map: PM2.5 intensity overlaid on Mapbox
 - Raw Data table and CSV export
 
-# Setup Instructions
+# ⚙️ Setup Instructions
 1. **Clone the repository**
 
        git clone https://github.com/pingptrn/dsi321_2025.git
@@ -144,7 +144,7 @@ Set the following in your shell or .env:
 - lakeFS UI: http://localhost:8000
 - Jupyter: http://localhost:8888
 
-# Learning Outcomes
+# 🧠 Learning Outcomes
 
 - Applied data versioning for reproducibility
 - Orchestrated workflows using Prefect
