@@ -133,3 +133,6 @@ def main_flow():
 
     #Task 3: Load data into lakeFS storage in a parquent format
     load_to_lakefs(df=df, lakefs_s3_path=lakefs_s3_path, storage_options=storage_options)
+
+if __name__ == "__main__":
+    main_flow()

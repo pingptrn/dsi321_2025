@@ -13,7 +13,7 @@ with open("style.css") as f:
 
 # --- Sidebar Navigation ---
 st.sidebar.image("https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png", width=200)
-menu = st.sidebar.radio("Navigation", ["Dashboard", "Map View", "Raw Data", "ML View"], index=0)
+menu = st.sidebar.radio("Navigation", ["Dashboard", "ML View","Raw Data"], index=0)
 st.sidebar.markdown("---")
 st.sidebar.markdown("**User:** You\nVersion: 1.0")
 st.sidebar.button("Logout")
@@ -158,24 +158,6 @@ if menu == "Dashboard":
         else:
             st.info("No valid PM2.5-province data to plot.")
 
-
-
-
-
-# --- Map View ---
-elif menu == "Map View":
-    st.title("🗺️ Map View")
-    df_map = df_filtered[df_filtered["PM25.value"] > 0]
-    fig = px.scatter_mapbox(df_map, lat="lat", lon="long", size="PM25.value", color="PM25.value",
-                            hover_name="nameEN", zoom=5, mapbox_style="open-street-map")
-    st.plotly_chart(fig, use_container_width=True)
-
-# --- Raw Data ---
-elif menu == "Raw Data":
-    st.title("📄 Raw Data Table")
-    st.dataframe(df_filtered)
-    st.download_button("Download CSV", data=df_filtered.to_csv(index=False), file_name="pm25_filtered.csv")
-  
 # --- ML View ---
 elif menu == "ML View":
     st.title("🤖 ML View: K-Means Clustering on PM2.5")
@@ -212,3 +194,10 @@ elif menu == "ML View":
         )
 
         st.plotly_chart(fig, use_container_width=True)
+
+# --- Raw Data ---
+elif menu == "Raw Data":
+    st.title("📄 Raw Data Table")
+    st.dataframe(df_filtered)
+    st.download_button("Download CSV", data=df_filtered.to_csv(index=False), file_name="pm25_filtered.csv")
+
