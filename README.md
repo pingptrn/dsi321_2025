@@ -41,16 +41,6 @@ Using docker-compose up, the system spins up multiple interconnected services as
 
 - Connects to lakeFS to read the current PM2.5 data using S3 paths.
 
-- Includes features such as:
-
-        - Province and station-level filtering
-
-        - PM2.5 distribution insights by time/location
-
-        - Interactive charts (bar, boxplot, map)
-
-        - Data export in CSV format
-
 # Project Structure
         dsi321_2025/
         │
@@ -110,7 +100,57 @@ Using docker-compose up, the system spins up multiple interconnected services as
 4. Containerized Services
 - All services (dashboard, pipeline, workers) run in Docker using:
    
-                docker-compose up --build
+         docker-compose up --build
+
+# Streamlit UI Features
+**Filters**
+
+-Province (All, Bangkok, Chiang Mai, etc.)
+-Station (dependent on Province selection)
+
+**Metrics**
+
+-Total record count
+-Max & Min PM2.5 value with location
+
+**Charts**
+
+- Bar Chart: Top 10 Provinces or Stations by PM2.5
+- Box Plot: Top 5 Provinces PM2.5 distribution
+- Map: PM2.5 intensity overlaid on Mapbox
+- Raw Data table and CSV export
+
+# Setup Instructions
+1. **Clone the repository**
+
+       git clone https://github.com/pingptrn/dsi321_2025.git
+       cd dsi321_2025
+
+2. **Set environment variables**
+Set the following in your shell or .env:
+
+       export LAKEFS_ACCESS_KEY=...
+       export LAKEFS_SECRET_KEY=...
+       export LAKEFS_ENDPOINT=http://lakefs:8000
+
+3. **Launch everything**
+
+       docker-compose up --build
+
+4. **Access dashboards**
+
+- Streamlit: http://localhost:8501
+- Prefect: http://localhost:4200
+- lakeFS UI: http://localhost:8000
+- Jupyter: http://localhost:8888
+
+# Learning Outcomes
+
+- Applied data versioning for reproducibility
+- Orchestrated workflows using Prefect
+- Designed modular dashboards with Plotly + Streamlit
+- Managed cloud datasets in Parquet with structured paths
+- Deployed end-to-end pipelines with Docker Compose
 
 
 
