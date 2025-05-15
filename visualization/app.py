@@ -13,7 +13,7 @@ with open("style.css") as f:
 
 # --- Sidebar Navigation ---
 st.sidebar.image("https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png", width=200)
-menu = st.sidebar.radio("Navigation", ["Dashboard", "ML View","Raw Data"], index=0)
+menu = st.sidebar.radio("Navigation", ["Dashboard", "ML Clustering Map View","Raw Data"], index=0)
 st.sidebar.markdown("---")
 st.sidebar.markdown("**User:** You\nVersion: 1.0")
 st.sidebar.button("Logout")
@@ -159,8 +159,8 @@ if menu == "Dashboard":
             st.info("No valid PM2.5-province data to plot.")
 
 # --- ML View ---
-elif menu == "ML View":
-    st.title("🤖 ML View: K-Means Clustering on PM2.5")
+elif menu == "ML Clustering Map View":
+    st.title("ML View: K-Means Clustering on PM2.5")
     st.markdown("Each color represents a cluster of stations based on similar PM2.5 levels using K-Means (n=3)")
 
     df_ml = df_filtered.dropna(subset=["PM25.value", "lat", "long", "nameEN"]).copy()
@@ -181,19 +181,60 @@ elif menu == "ML View":
         cluster_names = {0: "Low PM2.5", 1: "Moderate PM2.5", 2: "High PM2.5"}
         df_ml["cluster_label"] = df_ml["cluster"].map(cluster_names)
 
+        # 💡 Explanation section
+        st.markdown("### 🧠 Clustering Interpretation")
+        cluster_summary = (
+            df_ml.groupby("cluster_label")["PM25.value"]
+            .agg(["count", "min", "max", "mean"])
+            .rename(columns={
+                "count": "Stations",
+                "min": "Min PM2.5",
+                "max": "Max PM2.5",
+                "mean": "Average PM2.5"
+            })
+            .reset_index()
+        )
+        st.dataframe(cluster_summary.style.format({
+            "Min PM2.5": "{:.2f}",
+            "Max PM2.5": "{:.2f}",
+            "Average PM2.5": "{:.2f}"
+        }))
+
+        st.markdown("""
+        **Interpretation of Clusters**  
+        - 🟢 **Low PM2.5**: Stations with relatively clean air.
+        - 🔵 **Moderate PM2.5**: Stations with noticeable but not critical pollution.
+        - 🔴 **High PM2.5**: Stations with high pollution levels that may pose health risks.
+
+        Clustering is performed using **K-Means** based on the `PM2.5` value across stations.  
+        The algorithm automatically finds natural groupings of pollution levels into 3 categories.
+        """)
+
+        # 📍 Plot
+        center_lat = df_ml["lat"].mean()
+        center_lon = df_ml["long"].mean()
+
         fig = px.scatter_mapbox(
             df_ml,
             lat="lat",
             lon="long",
-            color="cluster_label",           # 🚀 Easier to interpret
-            size="PM25.value",               # ✅ No more -1 errors
+            color="cluster_label",
+            size="PM25.value",
             hover_name="nameEN",
             mapbox_style="open-street-map",
-            zoom=5,
-            title="📍 K-Means Clustering of PM2.5 Stations by Pollution Level"
+            center={"lat": center_lat, "lon": center_lon},  # ✅ เพิ่ม center ตรงนี้
+            zoom=6,  # ✅ ใส่แค่ครั้งเดียว
+            title="📍 K-Means Clustering of PM2.5 Stations by Pollution Level",
+            color_discrete_map={
+                "Low PM2.5": "green",
+                "Moderate PM2.5": "blue",
+                "High PM2.5": "red"
+            }
         )
 
+
         st.plotly_chart(fig, use_container_width=True)
+
 
 # --- Raw Data ---
 elif menu == "Raw Data":
