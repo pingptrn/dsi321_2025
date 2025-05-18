@@ -36,6 +36,7 @@ Enables real-time exploration of air quality data pulled directly from lakeFS vi
 4. **Streamlit (user-facing dashboard):**
 Offers an intuitive, web-based interface for users to view trends and anomalies in PM2.5 data, powered by lakeFS-backed storage.
 
+
 # Project Structure
         dsi321_2025/
         │
@@ -65,6 +66,7 @@ Offers an intuitive, web-based interface for users to view trends and anomalies 
         ├── LICENSE
         └── README.md                             # You're here!
 
+        
 # Evidence for the Previous 90 Marks
 1. **Repository Setup & Code Management**
 All source code, notebooks, and configuration files are organized under:
@@ -128,18 +130,167 @@ All source code, notebooks, and configuration files are organized under:
 | Schema mismatches                               | Enforced `schema.md` validation inside the pipeline                 |
 | Loss of previously collected data after rebuild | Validated lakeFS persisted history and used commit log to recover   |
 
+
+# Visualization of the Gathered Data
+This section showcases interactive and static visualizations from the Streamlit dashboard, developed using Matplotlib and Plotly, to explore trends in Thailand’s PM2.5 air quality data.
+
+🔍 ***Interactive Filtering: Province & Station Selectors***
+
+<img width="970" alt="Screenshot 2568-05-18 at 20 23 19" src="https://github.com/user-attachments/assets/304dd800-7c92-4b85-92a2-884303bb2624" />
+
+<ins>Description:</ins>
+The dashboard includes dropdown filters for:
+
+   - Province
+
+   - Station
+
+These filters allow users to narrow down PM2.5 data visualizations to specific regions or stations. When applied, all charts and KPIs dynamically update to reflect only the selected subset of data.
+
+<ins>**Value:**</ins>
+This interactivity enhances user engagement and supports location-specific insights — enabling policymakers or researchers to focus on areas of concern.
+
+<ins>**Insight:**</ins>
+EX. By selecting "Bangkok", users can immediately explore inner-city air quality and identify high-risk monitoring points.
+
+📍***Visualization 1: PM2.5 Scorecard Summary***
+<img width="985" alt="Screenshot 2568-05-18 at 20 10 56" src="https://github.com/user-attachments/assets/427885b8-a184-4949-ac4b-9d0d2fae7137" />  
+<ins>Description:</ins>
+The top of the dashboard features a KPI scorecard that summarizes real-time data status:
+
+   - Total Records collected
+
+   - Maximum PM2.5 value with location
+
+   - Minimum PM2.5 value with location
+
+These metrics are updated dynamically with each new data ingestion and help users grasp the current air quality situation at a glance.
+
+<ins>Insight:</ins>
+
+   - The dataset currently includes 19,787 records, indicating strong temporal coverage.
+
+   - The highest PM2.5 value is 46.8 μg/m³ recorded at Phaya Thaen Public Park, Yasothon, which may reflect local emission sources.
+
+   - The lowest PM2.5 value is -1.0 μg/m³ (likely a sensor error) recorded at Samut Sakhon Wittayalai School, which should be flagged for data cleaning or anomaly detection.
+
+📍 ***Visualization 2: Top 10 Provinces by Max PM2.5***
+
+<img width="469" alt="Screenshot 2568-05-18 at 20 12 47" src="https://github.com/user-attachments/assets/5b8a0e69-888b-4b4f-8aae-4d6abf472c11" />
+
+<ins>Description:</ins>
+   - A horizontal bar chart ranks provinces based on their highest recorded PM2.5 levels. Each bar represents a province with color intensity corresponding to pollution severity.
+
+<ins>Insight:</ins>
+   - Yasothon, Kanchanaburi, and Rayong are among the top provinces with the highest PM2.5 values, indicating potential pollution hotspots.
+
+
+📍 ***Visualization 3: PM2.5 Distribution (Boxplot)***
+
+<img width="513" alt="Screenshot 2568-05-18 at 20 13 18" src="https://github.com/user-attachments/assets/8b811530-060d-48e6-8af5-1a5dc4af142a" />
+
+<ins>Description:</ins>
+   - A boxplot displays the distribution of PM2.5 levels for the top 5 provinces. It shows quartiles, outliers, and spread across measurements.
+
+<ins>Insight:</ins>
+   - The distribution reveals that while all top provinces experience pollution spikes, some like Saraburi and Nan have more frequent extreme PM2.5 levels.
+
+
+📍 ***Visualization 4: Raw Data Table***
+
+<img width="934" alt="Screenshot 2568-05-18 at 20 14 36" src="https://github.com/user-attachments/assets/ed20b3c4-5972-4b3e-b358-2c9ab8403874" />
+
+<ins>Description:</ins>
+   - An interactive table displays recent PM2.5 data pulled from lakeFS via S3. Columns include timestamp, station info, and PM2.5 readings. A download button allows data export.
+
+<ins>Insight:</ins>
+   - Useful for quick inspection and verification of live records, enabling transparency and traceability.
+
+
+# Machine Learning Application 
+- **Problem Statement**
+This project applies unsupervised machine learning to analyze air pollution patterns across Thailand using PM2.5 sensor data. The objective is to group air quality monitoring stations into clusters based on pollution levels, without prior labels, to reveal natural groupings of environmental risk.
+
+- **Model and Approach**
+  
+   - Model Used: **K-Means Clustering (unsupervised learning)(Visualization 5)**
+
+   - Features: Average PM2.5 values by station
+
+   - Preprocessing Steps:
+
+        - Aggregated PM2.5 values by station
+
+        - Normalized features
+
+        - Specified number of clusters: k = 3 to reflect low, moderate, and high PM2.5 levels
+
+   - Clustering Output:
+
+        - Each station was assigned a cluster label (0, 1, or 2)
+
+- **Results and Evaluation**
+   - Cluster Interpretation:
+
+        🔵 Cluster 0 – Low PM2.5: Stations with clean air
+        
+        🟢 Cluster 1 – Moderate PM2.5: Stations with noticeable but not severe pollution
+        
+        🔴 Cluster 2 – High PM2.5: Stations with serious pollution concerns
+
+   - Visualization: Displayed as colored bubbles on a geographic map using Streamlit
+
+<img width="969" alt="Screenshot 2568-05-18 at 20 13 55" src="https://github.com/user-attachments/assets/d5103b56-dd7b-4cd8-b578-a7eac4f76562" />
+
+   - Insight: Urban areas and industrial provinces are more frequently represented in the "High PM2.5" cluster.
+
+- **Key Learnings**
+  
+   - K-Means effectively separated air quality stations into interpretable categories.
+
+   - The results aligned with real-world expectations — high-PM2.5 clusters were often located in industrial or densely populated areas.
+
+   - This unsupervised method provided a scalable way to monitor pollution without labeled training data.
+
+
+# Conclusion
+This project successfully delivered a **real-time air quality data pipeline** with automated data ingestion, processing, storage, and visualization — covering the full data engineering lifecycle. By leveraging tools like **Prefect, lakeFS, Jupyter, and Streamlit**, the system enables continuous monitoring and insightful analysis of PM2.5 levels across Thailand.
+
+- **Key Achievements:**
+
+   - Built a scheduled workflow using Prefect to ingest live PM2.5 data daily.
+
+   - Implemented data version control with lakeFS, ensuring reproducibility and traceability.
+
+   - Designed an interactive Streamlit dashboard with filtering, charts, and clustering views.
+
+   - Applied K-Means clustering to group stations by pollution severity, uncovering spatial patterns in air quality.
+
+- **Future Improvements:**
+
+   - **Data enrichment:** Integrate weather data (e.g., humidity, temperature) for deeper analysis.
+
+   - **Model expansion:** Add supervised models to predict future PM2.5 values.
+
+   - **Alert system:** Implement automated alerts for dangerously high PM2.5 levels.
+
+   - **Scalability:** Deploy on cloud infrastructure to handle more stations and longer timeframes.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+        
 # How It Works
 1. pipeline.py fetches and cleans data, then stores it in lakeFS under a structured path:
   
          s3://dsi321-air-quality/main/airquality.parquet/year=2025/month=.../day=.../
 
-2. Data Versioning (lakeFS)
+3. Data Versioning (lakeFS)
 
 
         - All PM2.5 data is versioned using lakeFS.
         - Reference (ref) info is stored in lakefs-refs/airquality-lakefs-ref.txt.
 
-3. Data Visualization (Streamlit)
+4. Data Visualization (Streamlit)
    
         - visualization/app.py builds the user interface.
         - Supports:
@@ -156,7 +307,7 @@ All source code, notebooks, and configuration files are organized under:
 
                 - Raw Data Explorer + CSV download
 
-4. Containerized Services
+5. Containerized Services
 - All services (dashboard, pipeline, workers) run in Docker using:
    
          docker-compose up --build
@@ -203,13 +354,6 @@ Set the following in your shell or .env:
 - lakeFS UI: http://localhost:8000
 - Jupyter: http://localhost:8888
 
-# 🧠 Learning Outcomes
-
-- Applied data versioning for reproducibility
-- Orchestrated workflows using Prefect
-- Designed modular dashboards with Plotly + Streamlit
-- Managed cloud datasets in Parquet with structured paths
-- Deployed end-to-end pipelines with Docker Compose
 
 
 
