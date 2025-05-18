@@ -5,69 +5,128 @@ Course: DSI321 – Big Data Infrastructure
 
 Institution: Data Science and Innovation, Thammasat University
 
-# 🌐 Project Description
-This project implements a Real-Time Air Quality Data Pipeline with Interactive Visualization, focused on monitoring PM2.5 levels across Thailand. The system leverages modern open-source data infrastructure tools to create a full-stack pipeline — from data ingestion and versioned storage to automated workflows and web-based analytics.
+# 🌐 Introduction
+This project implements a Real-Time Air Quality Data Pipeline with Interactive Visualization, designed to monitor and analyze PM2.5 pollution levels across Thailand. It integrates a modern, production-grade data stack to automate the full lifecycle of data — from ingestion and cleaning to versioned storage and interactive analytics.
 
-It integrates the following key components using Docker Compose for seamless orchestration:
+- The primary objectives were to:
 
-Docker Compose Orchestration
-Using docker-compose up, the system spins up multiple interconnected services as containers:
+- Automate daily data collection from Bangkok's air quality sensors.
 
-1. **lakeFS (Data Version Control)**
+- Clean, normalize, and partition the data using Prefect workflows.
 
-- Acts as a Git-like interface for object storage, managing version-controlled data in airquality.parquet format.
+- Store the output in a version-controlled Parquet format using lakeFS, enabling time-based querying and reproducibility.
 
-- Data is organized and stored under structured partitions (e.g., /year=2025/month=05/day=14/) to enable easy time-based querying.
+- Enable real-time data exploration via Jupyter Notebooks connected to lakeFS.
 
-- Enables reproducibility, branching, and rollback of datasets, ensuring data integrity.
+- Build an interactive dashboard with Streamlit for visualization.
 
-2. **Prefect (Data Orchestration)**
+- Apply K-Means clustering to identify geographical and temporal PM2.5 pollution patterns.
 
-- Automates the daily ingestion, cleaning, and transformation of PM2.5 data.
+The system is fully containerized using Docker Compose, which orchestrates the following services:
 
-- Workflows are deployed and monitored using Prefect UI, enabling visibility into execution status, success/failure logs, and historical runs.
+1. **lakeFS (Git-like data version control):**
+Manages structured Parquet files under a partitioned folder hierarchy (/year/month/day/hour), allowing rollback, branching, and reproducibility of datasets.
 
-- Ensures reliable and scheduled delivery of data to lakeFS.
+2. **Prefect (workflow automation):**
+Schedules and monitors data pipelines through its UI, ensuring daily ingestion, transformation, and delivery of cleaned data into lakeFS.
 
-3. **Jupyter Notebook (Data Exploration & Development)**
+3. **JupyterLab (EDA and development):**
+Enables real-time exploration of air quality data pulled directly from lakeFS via the S3 protocol, facilitating experimentation and notebook-based analysis.
 
-- Used for interactive development, debugging, and EDA (exploratory data analysis) of air quality data.
-
-- Access version-controlled data directly from lakeFS (via S3 protocol using s3fs), allowing for live experimentation with up-to-date datasets.
-
-4. **Streamlit (Interactive Dashboard)**
-
-- Provides a real-time, filterable web dashboard visualizing key air quality metrics.
-
-- Connects to lakeFS to read the current PM2.5 data using S3 paths.
+4. **Streamlit (user-facing dashboard):**
+Offers an intuitive, web-based interface for users to view trends and anomalies in PM2.5 data, powered by lakeFS-backed storage.
 
 # Project Structure
         dsi321_2025/
         │
-        ├── lakefs-refs/
-        │   └── airquality-lakefs-ref.txt         # lakeFS reference name for versioned PM2.5 dataset
+        ├── lakefs
+        │   ├── airquality-lakefs-ref.txt         # lakeFS reference name for versioned PM2.5 dataset
+        │   ├── sample_data.ipynb                 # Sample of stored data in lakeFS
         │
         ├── make/
         │   ├── Dockerfile.jupyter                # Dockerfile to launch a JupyterLab container
-        │   ├── Dockerfile.prefect-worker        # Dockerfile for running Prefect agent
-        │   ├── Dockerfile.streamlit             # Dockerfile for launching the Streamlit dashboard
-        │
+        │   ├── Dockerfile.prefect-worker         # Dockerfile for running Prefect agent
+        │   ├── Dockerfile.streamlit              # Dockerfile for launching the Streamlit dashboard
+        │   ├── requirements.txt                      # Python dependencies for all components
+        │   ├── wait-for-server.sh                    # Startup script ensuring services start in the right order
+        │    
         ├── visualization/
         │   ├── app.py                            # Main Streamlit app with dynamic filters and charts
         │   ├── style.css                         # Custom styling for the dashboard
         │
         ├── work/
-        │   └── Untitled.ipynb                    # Scratchpad or data exploration notebook
+        │   ├── Untitled.ipynb                    # Scratchpad or data exploration notebook
+        │   ├── deploy.py                         # lakeFS dataset deployment script
+        │   ├── pipeline.py                       # Prefect flow that downloads + stages PM2.5 data       
+        │   ├── schema.md                         
         │
-        ├── deploy.py                             # lakeFS dataset deployment script
-        ├── pipeline.py                           # Prefect flow that downloads + stages PM2.5 data
-        │
-        ├── requirements.txt                      # Python dependencies for all components
-        ├── wait-for-server.sh                    # Startup script ensuring services start in the right order
         ├── docker-compose.yml                    # Defines services (lakeFS, Streamlit, Prefect, etc.)
         ├── .gitignore                            # Prevents local files from being committed
         ├── LICENSE
         └── README.md                             # You're here!
+
+# Evidence for the Previous 90 Marks
+1. **Repository Setup & Code Management**
+All source code, notebooks, and configuration files are organized under:
+
+🔗  [GitHub Repository - pingptrn/dsi321_2025](https://github.com/pingptrn/dsi321_2025/tree/main)
+          
+- Project structure follows modular best practices, including:
+        
+    - work/ for Prefect workflows and pipeline scripts
+        
+    - app/ for Streamlit dashboard code
+        
+    - docker-compose.yml for multi-service orchestration
+        
+ - Version control used throughout development, with meaningful commits and consistent history.
+
+2. **Dataset Preparation and Integration**
+   
+🔗 The pipeline fetches live PM2.5 data from [Air4Thai](http://air4thai.pcd.go.th/webV3/#/Home).
+        
+- Data is:
+        
+  - Cleaned and normalized with Pandas
+        
+  - Partitioned by year/month/day/hour using datetime fields
+        
+  - Stored in Parquet format under lakeFS, e.g.:
+        lakefs://dsi321-air-quality/main/airquality.parquet/year=2025
+    
+  🔗 [Sample dataset ](https://github.com/pingptrn/dsi321_2025/blob/main/lakefs/sample_data.ipynb)
+<img width="1283" alt="Screenshot 2568-05-18 at 19 28 23" src="https://github.com/user-attachments/assets/33fdca48-4f38-42b3-b4a9-b125f20675b0" />
+  
+ - Schema enforcement is performed using a schema.md file to ensure column consistency and reduce data drift.
+
+3. **Workflow Automation with Prefect**
+- Prefect workflows were created to:
+        
+   - Retrieve data
+        
+   - Process and validate schema
+        
+   -  Load into lakeFS via S3-compatible path
+        
+- The flow was deployed via deploy.py and monitored on Prefect UI, with retries and logs handled automatically.
+
+4.**Visualization Infrastructure**
+- Streamlit was used to build a responsive dashboard with:
+        
+   - Dropdown filters (Province / Station)
+        
+   - Metric boxes, bar charts, and map views
+        
+- Data is pulled **directly from lakeFS** via s3fs integration.
+
+5. **Challenges and Resolutions**
+
+| Challenge                                       | Solution                                                            |
+| ----------------------------------------------- | ------------------------------------------------------------------- |
+| Prefect flow not showing on UI                  | Re-deployed using `python deploy.py` after `docker-compose down/up` |
+| Timestamp format issues in Parquet              | Fixed by using `.dt.strftime('%Y-%m-%d %H:%M:%S')`                  |
+| Schema mismatches                               | Enforced `schema.md` validation inside the pipeline                 |
+| Loss of previously collected data after rebuild | Validated lakeFS persisted history and used commit log to recover   |
 
 # How It Works
 1. pipeline.py fetches and cleans data, then stores it in lakeFS under a structured path:
