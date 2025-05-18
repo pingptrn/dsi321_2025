@@ -1,2 +1,4 @@
-df = pd.read_parquet("50d7be7df80545e98198522aefbe4bbc-0.parquet")
+import pandas as pd
+
+df = pd.read_parquet("/Users/pattaranitjaroennovapat/Desktop/50d7be7df80545e98198522aefbe4bbc-0.parquet")
 df.head(10)
