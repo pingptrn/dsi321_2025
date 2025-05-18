@@ -33,7 +33,7 @@ def load_data():
     df = pd.concat([pd.read_parquet(f"s3://{f}", filesystem=fs) for f in files], ignore_index=True)
     df['lat'] = pd.to_numeric(df['lat'], errors='coerce')
     df['long'] = pd.to_numeric(df['long'], errors='coerce')
-    df['PM25.value'] = pd.to_numeric(df['PM25.value'], errors='coerce')
+    df['PM25.value'] = pd.to_numeric(df['PM25.aqi'], errors='coerce')
     df['province'] = df['areaEN'].str.extract(r",\s*([^,]+)$")[0].str.strip()
     return df.dropna(subset=['lat', 'long', 'PM25.value'])
 
