@@ -37,37 +37,8 @@ Enables real-time exploration of air quality data pulled directly from lakeFS vi
 Offers an intuitive, web-based interface for users to view trends and anomalies in PM2.5 data, powered by lakeFS-backed storage.
 
 
-# Project Structure
-        dsi321_2025/
-        │
-        ├── lakefs
-        │   ├── airquality-lakefs-ref.txt         # lakeFS reference name for versioned PM2.5 dataset
-        │   ├── sample_data.ipynb                 # Sample of stored data in lakeFS
-        │
-        ├── make/
-        │   ├── Dockerfile.jupyter                # Dockerfile to launch a JupyterLab container
-        │   ├── Dockerfile.prefect-worker         # Dockerfile for running Prefect agent
-        │   ├── Dockerfile.streamlit              # Dockerfile for launching the Streamlit dashboard
-        │   ├── requirements.txt                      # Python dependencies for all components
-        │   ├── wait-for-server.sh                    # Startup script ensuring services start in the right order
-        │    
-        ├── visualization/
-        │   ├── app.py                            # Main Streamlit app with dynamic filters and charts
-        │   ├── style.css                         # Custom styling for the dashboard
-        │
-        ├── work/
-        │   ├── Untitled.ipynb                    # Scratchpad or data exploration notebook
-        │   ├── deploy.py                         # lakeFS dataset deployment script
-        │   ├── pipeline.py                       # Prefect flow that downloads + stages PM2.5 data       
-        │   ├── schema.md                         
-        │
-        ├── docker-compose.yml                    # Defines services (lakeFS, Streamlit, Prefect, etc.)
-        ├── .gitignore                            # Prevents local files from being committed
-        ├── LICENSE
-        └── README.md                             # You're here!
-
         
-# Evidence for the Previous 90 Marks
+# Evidence for the Previous 
 1. **Repository Setup & Code Management**
 All source code, notebooks, and configuration files are organized under:
 
@@ -95,11 +66,9 @@ All source code, notebooks, and configuration files are organized under:
         
   - Stored in Parquet format under lakeFS, e.g.:
         lakefs://dsi321-air-quality/main/airquality.parquet/year=2025
-    
-  🔗 [Sample dataset ](https://github.com/pingptrn/dsi321_2025/blob/main/lakefs/sample_data.ipynb)
-<img width="1283" alt="Screenshot 2568-05-18 at 19 28 23" src="https://github.com/user-attachments/assets/33fdca48-4f38-42b3-b4a9-b125f20675b0" />
-  
- - Schema enforcement is performed using a schema.md file to ensure column consistency and reduce data drift.
+<img width="1283" alt="Screenshot 2568-05-25 at 15 07 53" src="https://github.com/user-attachments/assets/718ea6de-3d7f-40b2-ad23-30adaf27360b" />
+
+   - Schema enforcement is performed using a schema.md file to ensure column consistency and reduce data drift.
 
 3. **Workflow Automation with Prefect**
 - Prefect workflows were created to:
@@ -154,7 +123,7 @@ This interactivity enhances user engagement and supports location-specific insig
 EX. By selecting "Bangkok", users can immediately explore inner-city air quality and identify high-risk monitoring points.
 
 📍***Visualization 1: PM2.5 Scorecard Summary***
-<img width="985" alt="Screenshot 2568-05-18 at 20 10 56" src="https://github.com/user-attachments/assets/427885b8-a184-4949-ac4b-9d0d2fae7137" />  
+<img width="957" alt="Screenshot 2568-05-25 at 15 08 48" src="https://github.com/user-attachments/assets/03f5f58e-154c-4c93-86b7-780d64a915d7" />
 <ins>Description:</ins>
 The top of the dashboard features a KPI scorecard that summarizes real-time data status:
 
@@ -168,15 +137,15 @@ These metrics are updated dynamically with each new data ingestion and help user
 
 <ins>Insight:</ins>
 
-   - The dataset currently includes 19,787 records, indicating strong temporal coverage.
+   - The dataset currently includes 17,484 records, indicating strong temporal coverage.
 
-   - The highest PM2.5 value is 46.8 μg/m³ recorded at Phaya Thaen Public Park, Yasothon, which may reflect local emission sources.
+   - The highest PM2.5 value is 123.0 μg/m³ recorded at National Housing Authority Bangplee, Samut Prakan, which may reflect local emission sources.
 
-   - The lowest PM2.5 value is -1.0 μg/m³ (likely a sensor error) recorded at Samut Sakhon Wittayalai School, which should be flagged for data cleaning or anomaly detection.
+   - The lowest PM2.5 value is -1.0 μg/m³ (likely a sensor error) recorded at  Sisaket Meteorological Center, Sisaket, which should be flagged for data cleaning or anomaly detection.
 
 📍 ***Visualization 2: Top 10 Provinces by Max PM2.5***
 
-<img width="469" alt="Screenshot 2568-05-18 at 20 12 47" src="https://github.com/user-attachments/assets/5b8a0e69-888b-4b4f-8aae-4d6abf472c11" />
+<img width="478" alt="Screenshot 2568-05-25 at 15 10 25" src="https://github.com/user-attachments/assets/59aae5e4-55a6-4e04-a428-a13f19d3b276" />
 
 <ins>Description:</ins>
    - A horizontal bar chart ranks provinces based on their highest recorded PM2.5 levels. Each bar represents a province with color intensity corresponding to pollution severity.
@@ -187,7 +156,7 @@ These metrics are updated dynamically with each new data ingestion and help user
 
 📍 ***Visualization 3: PM2.5 Distribution (Boxplot)***
 
-<img width="513" alt="Screenshot 2568-05-18 at 20 13 18" src="https://github.com/user-attachments/assets/8b811530-060d-48e6-8af5-1a5dc4af142a" />
+<img width="509" alt="Screenshot 2568-05-25 at 15 10 55" src="https://github.com/user-attachments/assets/25ed42d8-e778-462a-baa4-a4eecc8bc912" />
 
 <ins>Description:</ins>
    - A boxplot displays the distribution of PM2.5 levels for the top 5 provinces. It shows quartiles, outliers, and spread across measurements.
@@ -198,7 +167,7 @@ These metrics are updated dynamically with each new data ingestion and help user
 
 📍 ***Visualization 4: Raw Data Table***
 
-<img width="934" alt="Screenshot 2568-05-18 at 20 14 36" src="https://github.com/user-attachments/assets/ed20b3c4-5972-4b3e-b358-2c9ab8403874" />
+<img width="943" alt="Screenshot 2568-05-25 at 15 11 37" src="https://github.com/user-attachments/assets/5c2047ca-6434-46e2-931d-dfc65c62c51d" />
 
 <ins>Description:</ins>
    - An interactive table displays recent PM2.5 data pulled from lakeFS via S3. Columns include timestamp, station info, and PM2.5 readings. A download button allows data export.
@@ -240,7 +209,7 @@ This project applies unsupervised machine learning to analyze air pollution patt
 
    - Visualization: Displayed as colored bubbles on a geographic map using Streamlit
 
-<img width="969" alt="Screenshot 2568-05-18 at 20 13 55" src="https://github.com/user-attachments/assets/d5103b56-dd7b-4cd8-b578-a7eac4f76562" />
+<img width="968" alt="Screenshot 2568-05-25 at 15 12 46" src="https://github.com/user-attachments/assets/4b1d9184-c5e3-4a1e-94c6-425603620987" />
 
    - Insight: Urban areas and industrial provinces are more frequently represented in the "High PM2.5" cluster.
 
@@ -275,85 +244,4 @@ This project successfully delivered a **real-time air quality data pipeline** wi
    - **Alert system:** Implement automated alerts for dangerously high PM2.5 levels.
 
    - **Scalability:** Deploy on cloud infrastructure to handle more stations and longer timeframes.
-
-
--------------------------------------------------------------------------------------------------------------------------------------------------------
-        
-# How It Works
-1. pipeline.py fetches and cleans data, then stores it in lakeFS under a structured path:
-  
-         s3://dsi321-air-quality/main/airquality.parquet/year=2025/month=.../day=.../
-
-3. Data Versioning (lakeFS)
-
-
-        - All PM2.5 data is versioned using lakeFS.
-        - Reference (ref) info is stored in lakefs-refs/airquality-lakefs-ref.txt.
-
-4. Data Visualization (Streamlit)
-   
-        - visualization/app.py builds the user interface.
-        - Supports:
-
-                - Province/Station filtering
-
-                - Metrics (Max/Min PM2.5, Total Records)
-
-                - Bar Chart of Top Provinces or Stations
-
-                - Boxplot of PM2.5 by Province
-
-                - Map View (Mapbox)
-
-                - Raw Data Explorer + CSV download
-
-5. Containerized Services
-- All services (dashboard, pipeline, workers) run in Docker using:
-   
-         docker-compose up --build
-
-# 🖥️ Streamlit UI Features
-**Filters**
-
--Province (All, Bangkok, Chiang Mai, etc.)
--Station (dependent on Province selection)
-
-**Metrics**
-
--Total record count
--Max & Min PM2.5 value with location
-
-**Charts**
-
-- Bar Chart: Top 10 Provinces or Stations by PM2.5
-- Box Plot: Top 5 Provinces PM2.5 distribution
-- Map: PM2.5 intensity overlaid on Mapbox
-- Raw Data table and CSV export
-
-# ⚙️ Setup Instructions
-1. **Clone the repository**
-
-       git clone https://github.com/pingptrn/dsi321_2025.git
-       cd dsi321_2025
-
-2. **Set environment variables**
-Set the following in your shell or .env:
-
-       export LAKEFS_ACCESS_KEY=...
-       export LAKEFS_SECRET_KEY=...
-       export LAKEFS_ENDPOINT=http://lakefs:8000
-
-3. **Launch everything**
-
-       docker-compose up --build
-
-4. **Access dashboards**
-
-- Streamlit: http://localhost:8501
-- Prefect: http://localhost:4200
-- lakeFS UI: http://localhost:8000
-- Jupyter: http://localhost:8888
-
-
-
 
