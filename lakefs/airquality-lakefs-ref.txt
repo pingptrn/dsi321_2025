@@ -1,3 +1,0 @@
-lakefs://dsi321-air-quality/main/airquality.parquet/
-Commit:4416339f2437c9c5498e1a04c7d45bda1c8919f531cd35ef23b73cb282d7779a
- 
