@@ -151,7 +151,7 @@ These metrics are updated dynamically with each new data ingestion and help user
    - A horizontal bar chart ranks provinces based on their highest recorded PM2.5 levels. Each bar represents a province with color intensity corresponding to pollution severity.
 
 <ins>Insight:</ins>
-   - Yasothon, Kanchanaburi, and Rayong are among the top provinces with the highest PM2.5 values, indicating potential pollution hotspots.
+   - Samut Prakan, Bangkok, and Saraburi are among the top provinces with the highest PM2.5 values, indicating potential pollution hotspots.
 
 
 📍 ***Visualization 3: PM2.5 Distribution (Boxplot)***
@@ -162,7 +162,7 @@ These metrics are updated dynamically with each new data ingestion and help user
    - A boxplot displays the distribution of PM2.5 levels for the top 5 provinces. It shows quartiles, outliers, and spread across measurements.
 
 <ins>Insight:</ins>
-   - The distribution reveals that while all top provinces experience pollution spikes, some like Saraburi and Nan have more frequent extreme PM2.5 levels.
+   - The distribution reveals that while all top provinces experience pollution spikes, some like Saraburi and Chon Buri have more frequent extreme PM2.5 levels.
 
 
 📍 ***Visualization 4: Raw Data Table***
